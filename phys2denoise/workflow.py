@@ -19,7 +19,7 @@ from inspect import _empty, signature
 import numpy as np
 import pandas as pd
 from loguru import logger
-from physutils.tasks import transform_to_physio
+from physutils.tasks import generate_physio
 from pydra import Submitter, Workflow
 
 import phys2denoise.tasks as tasks
@@ -143,7 +143,7 @@ def build(
         tr=tr,
     )
     wf.add(
-        transform_to_physio(
+        generate_physio(
             name="transform_to_physio",
             input_file=wf.lzin.phys,
             fs=wf.lzin.fs,
@@ -155,7 +155,7 @@ def build(
     wf.add(
         tasks.compute_metrics(
             name="compute_metrics",
-            phys=wf.transform_to_physio.lzout.out,
+            phys=wf.generate_physio.lzout.out,
             metrics=wf.lzin.metrics,
             args=wf.lzin.metric_args,
         )
